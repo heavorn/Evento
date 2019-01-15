@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
+	<string>ca-app-pub-3940256099942544/2934735716</string>
+	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
+	<string>ca-app-pub-3940256099942544/4411468910</string>
+	<key>CLIENT_ID</key>
+	<string>451117211190-37etncdf70i3aq134k6b4jkhn3ag7rsq.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.451117211190-37etncdf70i3aq134k6b4jkhn3ag7rsq</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDJC-Rgi42R2qtcIwDKNDKGk2XXtCMFoHY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>451117211190</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>kh.edu.zamanuniversity.EventoXR</string>
+	<key>PROJECT_ID</key>
+	<string>evento-1dd01</string>
+	<key>STORAGE_BUCKET</key>
+	<string>evento-1dd01.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<true></true>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<false></false>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:451117211190:ios:58f8374aa12e90e5</string>
+	<key>DATABASE_URL</key>
+	<string>https://evento-1dd01.firebaseio.com</string>
+</dict>
+</plist>
