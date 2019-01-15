@@ -14,6 +14,9 @@ var posts = [Post]()
 class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     let gourp = DispatchGroup()
     
+    var vorn = 2
+    var vorn2 = 4
+    
 //    var posts = [Post]()
     var filters = [Post]()
     
