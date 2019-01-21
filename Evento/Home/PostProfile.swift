@@ -88,9 +88,9 @@ class PostProfile: UIViewController, MFMailComposeViewControllerDelegate {
 //        })
         guard let uid = Auth.auth().currentUser?.uid else {return}
         
-        let ref = Database.database().reference().child("books").child(uid)
+        let ref = Database.database().reference()
         let value = [post?.id: 1]
-        ref.updateChildValues(value) { (error, ref) in
+        ref.child("books").child(uid).updateChildValues(value) { (error, ref) in
             if (error != nil){
                 print("Failed to follow user:", error!)
                 return
@@ -99,34 +99,19 @@ class PostProfile: UIViewController, MFMailComposeViewControllerDelegate {
             print("Successfully booked")
         }
         
-        DispatchQueue.main.async {
-            let mailComposeViewController = self.configuredMailComposeViewController()
-            if MFMailComposeViewController.canSendMail() {
-                self.present(mailComposeViewController, animated: true, completion: nil)
-            } else {
-                self.showSendMailErrorAlert()
+        let value2 = ["bookTime": Date().timeIntervalSince1970]
+    ref.child("organizers").child((post!.user?.uid)!).child((post?.id)!).child(uid).updateChildValues(value2) { (error, ref) in
+            if (error != nil){
+                print("Failed to follow user:", error!)
+                return
             }
+            
+            print("Successfully booked")
         }
-        
-//        if !MFMailComposeViewController.canSendMail() {
-//            print("Mail services are not available")
-//            return
-//        }
-        
-//        let composeVC = MFMailComposeViewController()
-//        composeVC.mailComposeDelegate = self
-//
-//        // Configure the fields of the interface.
-//        print("OK")
-//        composeVC.setToRecipients(["vornvalentine@gmail.com"])
-//        composeVC.setSubject("Hello!")
-//        composeVC.setMessageBody("Hello from California!", isHTML: false)
-        
-        // Present the view controller modally.
-//        self.present(composeVC, animated: true, completion: nil)
         
         if let window = UIApplication.shared.keyWindow {
             self.confirmContainer.isHidden = true
+            
             
             DispatchQueue.main.async {
                 let label = UILabel()
@@ -162,46 +147,27 @@ class PostProfile: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
-    func configuredMailComposeViewController() -> MFMailComposeViewController {
-        let mailComposerVC = MFMailComposeViewController()
-        mailComposerVC.mailComposeDelegate = self // Extremely important to set the --mailComposeDelegate-- property, NOT the --delegate-- property
-        
-        mailComposerVC.setToRecipients(["vornvalentine@gmail.com"])
-        mailComposerVC.setSubject("Sending you an in-app e-mail...")
-        mailComposerVC.setMessageBody("Sending e-mail in-app is not so bad!", isHTML: false)
-        
-        return mailComposerVC
-    }
-    
-    func showSendMailErrorAlert() {
-        let sendMailErrorAlert = UIAlertView(title: "Could Not Send Email", message: "Your device could not send e-mail.  Please check e-mail configuration and try again.", delegate: self, cancelButtonTitle: "OK")
-        sendMailErrorAlert.show()
-    }
-    
-    // MARK: MFMailComposeViewControllerDelegate Method
-    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-        controller.dismiss(animated: true, completion: nil)
-    }
-    
 //    func configuredMailComposeViewController() -> MFMailComposeViewController {
 //        let mailComposerVC = MFMailComposeViewController()
-//        mailComposerVC.mailComposeDelegate = self
-//        print("lol")
+//        mailComposerVC.mailComposeDelegate = self // Extremely important to set the --mailComposeDelegate-- property, NOT the --delegate-- property
+//
 //        mailComposerVC.setToRecipients(["vornvalentine@gmail.com"])
-//        mailComposerVC.setSubject("Sending In-App Email")
-//        mailComposerVC.setMessageBody("Sending Email through your app in Swift", isHTML: false)
+//        mailComposerVC.setSubject("Sending you an in-app e-mail...")
+//        mailComposerVC.setMessageBody("Sending e-mail in-app is not so bad!", isHTML: false)
 //
 //        return mailComposerVC
 //    }
 //
-//    func mailComposeController(controller: MFMailComposeViewController,
-//                               didFinishWithResult result: MFMailComposeResult, error: NSError?) {
-//        // Check the result or perform other tasks.
-//
-//        // Dismiss the mail compose view controller.
-//        controller.dismiss(animated: true, completion: nil)
+//    func showSendMailErrorAlert() {
+//        let sendMailErrorAlert = UIAlertView(title: "Could Not Send Email", message: "Your device could not send e-mail.  Please check e-mail configuration and try again.", delegate: self, cancelButtonTitle: "OK")
+//        sendMailErrorAlert.show()
 //    }
     
+    // MARK: MFMailComposeViewControllerDelegate Method
+//    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+//        controller.dismiss(animated: true, completion: nil)
+//    }
+
     lazy var bookButton: UIButton = {
         let button = UIButton(type: .system)
         button.backgroundColor = .mainColor()
