@@ -10,7 +10,7 @@ import UIKit
 
 class Post {
     var id: String?
-    let user: User?
+    var userId: String?
     let name: String?
     let time: String?
     let month: String?
@@ -23,8 +23,7 @@ class Post {
     let eventUrl: String?
     var date: Date?
     
-    init(dictionary: [String : Any], user: User) {
-        self.user = user
+    init(dictionary: [String : Any]) {
         self.name = dictionary["name"] as? String
         self.time = dictionary["time"] as? String
         self.month = dictionary["month"] as? String
@@ -35,6 +34,6 @@ class Post {
         self.type = dictionary["type"] as? String
         self.eventUrl = dictionary["eventUrl"] as? String
         self.des = dictionary["des"] as? String
-        
+        self.userId = dictionary["uid"] as? String
     }
 }

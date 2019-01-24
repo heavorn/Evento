@@ -111,7 +111,9 @@ class LocationController: UITableViewController {
             dismiss(animated: true) {
                 self.homeController?.cityName = self.placesList[indexPath.row]
                 self.homeController?.type = "All"
-                self.homeController?.fetchUserID()
+//                self.homeController?.fetchUserID()
+                self.homeController?.fetchPost()
+//                self.homeController?.fetchPost(location: <#T##String#>, type: <#T##String#>)
             }
         } else {
             //        self.tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark

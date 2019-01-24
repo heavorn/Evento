@@ -147,7 +147,8 @@ class HomeHeader: UICollectionViewCell, UICollectionViewDelegate, UICollectionVi
     @objc func handleTech() {
         UserDefaults.standard.set(techLabel.text, forKey: "type")
         self.homeController?.type = techLabel.text
-        self.homeController?.fetchUserID()
+        self.homeController?.fetchPost()
+//        self.homeController?.fetchUserID()
         
     }
 

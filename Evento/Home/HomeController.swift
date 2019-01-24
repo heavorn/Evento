@@ -8,11 +8,12 @@
 
 import UIKit
 import Firebase
+import NVActivityIndicatorView
 
 var posts = [Post]()
+var users = [User]()
 
 class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-    let gourp = DispatchGroup()
     
     var vorn = 2
     var vorn2 = 4
@@ -26,34 +27,95 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     var cityName: String?
     var type: String?
     
+    var indicator: NVActivityIndicatorView?
+    
+    let welcomeBackground: UIView = {
+        let view = UIView()
+        view.backgroundColor = .mainColor()
+
+        return view
+    }()
+    
+    let welcomeLabel: UILabel = {
+        let label = UILabel()
+        label.text = "!Evento!"
+        label.font = UIFont(name: boldFont, size: 50)
+        label.textColor = .white
+        
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let window = UIApplication.shared.keyWindow {
+            let frame = UIScreen.main.bounds
+            window.addSubview(welcomeBackground)
+            welcomeBackground.frame = frame
+            indicator = NVActivityIndicatorView.init(frame: CGRect(x: self.view.center.x - 40, y: self.view.center.y - 40, width: 80, height: 80), type: .ballClipRotatePulse, color: .white, padding: 0)
+            welcomeBackground.addSubview(indicator!)
+            welcomeBackground.addSubview(welcomeLabel)
+            
+            welcomeLabel.anchor(top: indicator?.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 20, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+            welcomeLabel.centerXAnchor.constraint(equalTo: welcomeBackground.centerXAnchor).isActive = true
+        }
+        
+//        view.addSubview(welcomeBackground)
+//        welcomeBackground.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        
         cityName = UserDefaults.standard.string(forKey: "city")
         type = UserDefaults.standard.string(forKey: "type")
-        fetchUserID()
+//        fetchUserID()
+        fetchUser()
+        fetchPost()
+//        fetchPost(location: self.cityName!, type: self.type!)
         collectionView.backgroundColor = .white
         collectionView.showsVerticalScrollIndicator = false
         collectionView.register(HomeHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headId)
         collectionView.register(HomeCell.self, forCellWithReuseIdentifier: cellId)
-    }
-    
-    func fetchUserID() {
-        Spinner.start()
-        guard let uid = Auth.auth().currentUser?.uid else {return}
-        Database.fetchUserWithUID(uid: uid) { (user) in
-            self.fetchPost(user: user, location: self.cityName!, type: self.type!)
-        }
-    }
-    
-    func fetchPost(user: User,  location: String, type: String) {
         
+//        view.addSubview(indicator)
+//        indicator.startAnimating()
+    }
+    
+    private func fetchUser(){
+        Database.database().reference().observeSingleEvent(of: .value, with: { (snapshot) in
+            guard let dictionary = snapshot.value as? [String: Any] else {return}
+            dictionary.forEach({ (key, value) in
+                if let dic = value as? [String: Any] {
+                    let user = User(uid: key, dictionary: dic)
+                    users.append(user)
+                }
+            })
+        }, withCancel: nil)
+    }
+            
+//    func fetchUserID() {
+//        Spinner.start()
+//        guard let uid = Auth.auth().currentUser?.uid else {return}
+//        Database.fetchUserWithUID(uid: uid) { (user) in
+//            self.fetchPost(user: user, location: self.cityName!, type: self.type!)
+//        }
+//    }
+    
+//    let activityIndicatorView: NVActivityIndicatorView = {
+//        let indicator = NVActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 200, height: 200), type: NVActivityIndicatorType.pacman, color: .mainColor(), padding: 0)
+//
+//        return indicator
+//    }()
+    
+    func fetchPost() {
+//        Spinner.start()
+//        let activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: 50, y: 200, width: 100, height: 100), type: NVActivityIndicatorType.pacman, color: .mainColor(), padding: 20)
+//        activityIndicatorView.startAnimating()
+        indicator?.startAnimating()
         if posts.count == 0 {
             let ref = Database.database().reference()
             ref.child("posts").observeSingleEvent(of: .value, with: { (snapshot) in
                 guard let dictionary = snapshot.value as? [String: Any] else {return}
                 dictionary.forEach({ (key, value) in
                     if let dic = value as? [String: Any] {
-                        let post = Post(dictionary: dic, user: user)
+                        let post = Post(dictionary: dic)
                         post.id = key
 //                        let dateFormatter = DateFormatter()
 //                        dateFormatter.dateFormat = "dd MM, yyyy"
@@ -63,12 +125,12 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
                         posts.sort(by: { (p1, p2) -> Bool in
                             return p1.date?.compare(p2.date!) == .orderedAscending
                         })
-                        self.appendFilter(location: location, type: type)
+                        self.appendFilter(location: self.cityName!, type: self.type!)
                     }
                 })
             }, withCancel: nil)
         } else {
-            self.appendFilter(location: location, type: type)
+            self.appendFilter(location: self.cityName!, type: self.type!)
 //            self.filters.removeAll()
 //            var index = 0
 //            while index < posts.count {
@@ -79,7 +141,6 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
 //                self.collectionView.reloadData()
 //            }
         }
-        Spinner.stop()
     }
     
     func appendFilter(location: String, type: String) {
@@ -102,6 +163,25 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
                 self.collectionView.reloadData()
             }
         }
+//        self.welcomeBackground.layer.transform = CATransform3DMakeScale(1, 1, 1)
+        indicator?.stopAnimating()
+        UIView.animate(withDuration: 2, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseIn, animations: {
+            self.welcomeBackground.layer.transform = CATransform3DMakeScale(0.1, 0.1, 0.1)
+            self.welcomeBackground.alpha = 0.6
+            
+        }) { (completed) in
+//            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(0), execute: {
+//
+//            })
+            delay(bySeconds: 0.3, closure: {
+                self.welcomeBackground.alpha = 0
+                self.welcomeBackground.removeFromSuperview()
+            })
+        }
+//        welcomeBackground.isHidden = true
+        
+//        activityIndicatorView.stopAnimating()
+//        Spinner.stop()
     }
     
     func presentLocationController() {

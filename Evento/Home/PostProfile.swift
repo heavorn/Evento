@@ -86,7 +86,7 @@ class PostProfile: UIViewController, MFMailComposeViewControllerDelegate {
 //
 //
 //        })
-        guard let uid = Auth.auth().currentUser?.uid else {return}
+        guard let uid = Auth.auth().currentUser?.uid, let organizer = post?.userId, let postName = post?.name else {return}
         
         let ref = Database.database().reference()
         let value = [post?.id: 1]
@@ -99,14 +99,14 @@ class PostProfile: UIViewController, MFMailComposeViewControllerDelegate {
             print("Successfully booked")
         }
         
-        let value2 = ["bookTime": Date().timeIntervalSince1970]
-    ref.child("organizers").child((post!.user?.uid)!).child((post?.id)!).child(uid).updateChildValues(value2) { (error, ref) in
+        let value2 = [uid: Date().timeIntervalSince1970] as [String : Any]
+    ref.child("organizers").child(organizer).child(postName).updateChildValues(value2) { (error, ref) in
             if (error != nil){
                 print("Failed to follow user:", error!)
                 return
             }
-            
-            print("Successfully booked")
+        
+            print("Successfully update organizer table.")
         }
         
         if let window = UIApplication.shared.keyWindow {
