@@ -8,9 +8,8 @@
 
 import UIKit
 import Firebase
-import MessageUI
 
-class PostProfile: UIViewController, MFMailComposeViewControllerDelegate {
+class PostProfile: UIViewController {
     
     var post: Post?
     {
@@ -81,12 +80,68 @@ class PostProfile: UIViewController, MFMailComposeViewControllerDelegate {
         return button
     }()
     
+    func postRequest(url: String, para: [String: String], completion: @escaping ([String: Any]?, Error?) -> Void) {
+        // Send HTTP GET Request
+        
+        // Define server side script URL
+        let scriptUrl = "\(url)/"
+//
+//        let name = "Kimly"
+//        let email = "ktry@zamanuniversity.edu.kh"
+        // Add one parameter
+        let urlWithParams = scriptUrl + "?eventName=\(para["eventName"]!)&number=\(para["number"]!)&userName=\(para["userName"]!)&mailTo=\(para["mailTo"]!)"
+        
+//        let urlWithParams = scriptUrl + "?eventName=\(para["eventName"]!)&number=\(para["number"]!)&userName=\(name)&mailTo=\(email)"
+        
+        // Create NSURL Ibject
+        guard let myUrl = URL(string: urlWithParams) else {return}
+        
+        let request = NSMutableURLRequest(url: myUrl)
+        
+        // Set request HTTP method to GET. It could be POST as well
+        request.httpMethod = "GET"
+        
+        // Excute HTTP Request
+        let task = URLSession.shared.dataTask(with: request as URLRequest) { (data, response, error) in
+            if error != nil
+            {
+                print("error=\(error!)")
+                return
+            }
+            
+            print("Mail Sent!")
+            // Print out response string
+//            let responseString = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
+//            print("responseString = \(responseString!)")
+//
+//
+//            // Convert server json response to NSDictionary
+//            do {
+//                if let convertedJsonIntoDict = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary {
+//
+//                    // Print out dictionary
+//                    print(convertedJsonIntoDict)
+//
+//                    // Get value by key
+//                    let firstNameValue = convertedJsonIntoDict["eventName"] as? String
+//                    print(firstNameValue!)
+//
+//                }
+//            } catch let error as NSError {
+//                print(error.localizedDescription)
+//            }
+        }
+        
+        task.resume()
+    }
+    
     @objc func handleConfirm() {
 //        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
 //
 //
 //        })
-        guard let uid = Auth.auth().currentUser?.uid, let organizer = post?.userId, let postName = post?.name else {return}
+        
+        guard let uid = Auth.auth().currentUser?.uid, let organizer = post?.userId, let postName = post?.name, let email = currentUser?.email, let id = post?.id else {return}
         
         let ref = Database.database().reference()
         let value = [post?.id: 1]
@@ -98,6 +153,19 @@ class PostProfile: UIViewController, MFMailComposeViewControllerDelegate {
             
             print("Successfully booked")
         }
+        
+        // prepare json data
+        let parameters: [String: String] = ["mailTo": email, "eventName": postName, "number": id, "userName": (currentUser?.name)!]
+        
+//        postRequest(url: "https://us-central1-evento-1dd01.cloudfunctions.net/sendMail", para: parameters) { ([String : Any]?, error) in
+//            if (error != nil){
+//                print("Failed to request:", error!)
+//                return
+//            }
+//
+//            print("Successfully sent.")
+//        }
+        
         
         let value2 = [uid: Date().timeIntervalSince1970] as [String : Any]
     ref.child("organizers").child(organizer).child(postName).updateChildValues(value2) { (error, ref) in
@@ -489,7 +557,6 @@ class PostProfile: UIViewController, MFMailComposeViewControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = .white
     }
 }

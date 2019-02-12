@@ -11,7 +11,8 @@ import Firebase
 import NVActivityIndicatorView
 
 var posts = [Post]()
-var users = [User]()
+//var users = [User]()]
+var currentUser: User?
 
 class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
@@ -26,6 +27,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     var cityName: String?
     var type: String?
+    var isChanged = false
     
     var indicator: NVActivityIndicatorView?
     
@@ -35,6 +37,13 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
 
         return view
     }()
+    
+//    let blackLayer: UIView = {
+//        let view = UIView()
+//        view.backgroundColor = UIColor(white: 0, alpha: 0.5)
+//
+//        return view
+//    }()
     
     let welcomeLabel: UILabel = {
         let label = UILabel()
@@ -79,17 +88,13 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     }
     
     private func fetchUser(){
-        Database.database().reference().observeSingleEvent(of: .value, with: { (snapshot) in
-            guard let dictionary = snapshot.value as? [String: Any] else {return}
-            dictionary.forEach({ (key, value) in
-                if let dic = value as? [String: Any] {
-                    let user = User(uid: key, dictionary: dic)
-                    users.append(user)
-                }
-            })
-        }, withCancel: nil)
+        guard let uid = Auth.auth().currentUser?.uid else {return}
+        
+        Database.fetchUserWithUID(uid: uid) { (user) in
+            currentUser = user
+        }
     }
-            
+    
 //    func fetchUserID() {
 //        Spinner.start()
 //        guard let uid = Auth.auth().currentUser?.uid else {return}
@@ -106,9 +111,10 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     func fetchPost() {
 //        Spinner.start()
-//        let activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: 50, y: 200, width: 100, height: 100), type: NVActivityIndicatorType.pacman, color: .mainColor(), padding: 20)
-//        activityIndicatorView.startAnimating()
+        
+        self.welcomeBackground.alpha = 1
         indicator?.startAnimating()
+        
         if posts.count == 0 {
             let ref = Database.database().reference()
             ref.child("posts").observeSingleEvent(of: .value, with: { (snapshot) in
@@ -117,9 +123,6 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
                     if let dic = value as? [String: Any] {
                         let post = Post(dictionary: dic)
                         post.id = key
-//                        let dateFormatter = DateFormatter()
-//                        dateFormatter.dateFormat = "dd MM, yyyy"
-//                        let date = dateFormatter.date(from: "\(post.day!) \(post.month!), 2018")
                         post.date = convertDate(month: post.month!, day: post.day!)
                         posts.append(post)
                         posts.sort(by: { (p1, p2) -> Bool in
@@ -130,7 +133,9 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
                 })
             }, withCancel: nil)
         } else {
-            self.appendFilter(location: self.cityName!, type: self.type!)
+            delay(bySeconds: 2) {
+                self.appendFilter(location: self.cityName!, type: self.type!)
+            }
 //            self.filters.removeAll()
 //            var index = 0
 //            while index < posts.count {
@@ -147,6 +152,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         self.filters.removeAll()
         var index = 0
         if type == "All" {
+            print("OK")
             while index < posts.count {
                 if posts[index].city == location {
                     self.filters.append(posts[index])
@@ -165,19 +171,26 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         }
 //        self.welcomeBackground.layer.transform = CATransform3DMakeScale(1, 1, 1)
         indicator?.stopAnimating()
-        UIView.animate(withDuration: 2, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseIn, animations: {
-            self.welcomeBackground.layer.transform = CATransform3DMakeScale(0.1, 0.1, 0.1)
-            self.welcomeBackground.alpha = 0.6
-            
-        }) { (completed) in
-//            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(0), execute: {
-//
-//            })
-            delay(bySeconds: 0.3, closure: {
-                self.welcomeBackground.alpha = 0
-                self.welcomeBackground.removeFromSuperview()
-            })
+        if self.isChanged == true {
+            self.welcomeBackground.alpha = 0
+//            self.blackLayer.removeFromSuperview()
+        } else {
+            UIView.animate(withDuration: 2, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseIn, animations: {
+                self.welcomeBackground.layer.transform = CATransform3DMakeScale(0.1, 0.1, 0.1)
+                self.welcomeBackground.alpha = 0.6
+                
+            }) { (completed) in
+                delay(bySeconds: 0.4, closure: {
+                    self.welcomeBackground.alpha = 0
+                    self.welcomeBackground.backgroundColor = UIColor(white: 0, alpha: 0.5)
+                    self.welcomeBackground.layer.transform = CATransform3DMakeScale(1, 1, 1)
+                    self.welcomeLabel.removeFromSuperview()
+                    self.isChanged = true
+                })
+            }
         }
+        
+        
 //        welcomeBackground.isHidden = true
         
 //        activityIndicatorView.stopAnimating()

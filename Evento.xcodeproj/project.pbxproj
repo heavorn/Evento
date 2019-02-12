@@ -28,6 +28,7 @@
 		8B85700421B517D40065CE8D /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B85700321B517D40065CE8D /* Post.swift */; };
 		8B865D2F21B2D1B4006413B5 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B865D2E21B2D1B4006413B5 /* User.swift */; };
 		8B99B14821C1028600453CEC /* PostProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B99B14721C1028600453CEC /* PostProfile.swift */; };
+		8BA2F68021FAB86700B00E9B /* SplashScreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA2F67F21FAB86700B00E9B /* SplashScreenController.swift */; };
 		8BAC38B321A65C59006EACA5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BAC38B221A65C59006EACA5 /* AppDelegate.swift */; };
 		8BAC38B821A65C59006EACA5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8BAC38B621A65C59006EACA5 /* Main.storyboard */; };
 		8BAC38BA21A65C5A006EACA5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BAC38B921A65C5A006EACA5 /* Assets.xcassets */; };
@@ -110,6 +111,7 @@
 		8B85700321B517D40065CE8D /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		8B865D2E21B2D1B4006413B5 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		8B99B14721C1028600453CEC /* PostProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostProfile.swift; sourceTree = "<group>"; };
+		8BA2F67F21FAB86700B00E9B /* SplashScreenController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenController.swift; sourceTree = "<group>"; };
 		8BAC38AF21A65C59006EACA5 /* Evento.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Evento.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BAC38B221A65C59006EACA5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8BAC38B721A65C59006EACA5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -278,6 +280,7 @@
 			isa = PBXGroup;
 			children = (
 				8BAC38C521A65D63006EACA5 /* MainTabBarController.swift */,
+				8BA2F67F21FAB86700B00E9B /* SplashScreenController.swift */,
 			);
 			path = TabBarController;
 			sourceTree = "<group>";
@@ -558,6 +561,7 @@
 				8BC1996921F9C4FA006842A1 /* NVActivityIndicatorAnimationLineScale.swift in Sources */,
 				8B1C92FA21A94150006CB33A /* SignupController.swift in Sources */,
 				8BAC38CC21A65F06006EACA5 /* SearchController.swift in Sources */,
+				8BA2F68021FAB86700B00E9B /* SplashScreenController.swift in Sources */,
 				8B8281AC21B0F05500BCCA9D /* SettingController.swift in Sources */,
 				8BC1995B21F9C4FA006842A1 /* NVActivityIndicatorAnimationBallZigZag.swift in Sources */,
 				8BC1997D21F9C502006842A1 /* NVActivityIndicatorViewable.swift in Sources */,

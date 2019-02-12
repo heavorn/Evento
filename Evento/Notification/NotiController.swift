@@ -105,6 +105,9 @@ class NotiController: UICollectionViewController, UICollectionViewDelegateFlowLa
                 }, withCancel: nil)
             }, withCancel: nil)
             
+            if notiOrganizers.isEmpty {
+                self.collectionView.reloadData()
+            }
 //            self.group.notify(queue: .main) {
 ////                print(self.notiOrganizers[2].postName)
 //                print("2")
@@ -128,6 +131,10 @@ class NotiController: UICollectionViewController, UICollectionViewDelegateFlowLa
                     //
                 })
             }, withCancel: nil)
+            
+            if notiPosts.isEmpty {
+                self.collectionView.reloadData()
+            }
 //            self.collectionView?.refreshControl?.endRefreshing()
         }
     }

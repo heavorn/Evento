@@ -32,6 +32,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
 //        UserDefaults.standard.set(true, forKey: "login")
         UserDefaults.standard.set("Phnom Penh", forKey: "city")
         UserDefaults.standard.set("All", forKey: "type")
+        posts.removeAll()
         
         //Home
         let homeNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "home_unselected"), selectedImage: #imageLiteral(resourceName: "home_selected"), rootViewController: HomeController(collectionViewLayout: UICollectionViewFlowLayout()))

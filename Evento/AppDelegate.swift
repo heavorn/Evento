@@ -22,11 +22,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow()
         window?.makeKeyAndVisible()
         window?.rootViewController = MainTabBarController()
+//        window?.rootViewController = SplashScreenController()
 
         UIApplication.shared.statusBarView?.backgroundColor = UIColor.mainColor()
         UIApplication.shared.statusBarStyle = .lightContent
         
         return true
+    }
+    
+    class func sharedInstance() -> AppDelegate{
+        return UIApplication.shared.delegate as! AppDelegate
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
