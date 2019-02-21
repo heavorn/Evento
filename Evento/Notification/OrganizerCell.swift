@@ -41,7 +41,7 @@ class OrganizerCell: UICollectionViewCell {
         let label = UILabel()
         label.numberOfLines = 0
         label.textColor = .black
-        label.font = UIFont(name: boldFont, size: 14)
+        label.font = UIFont(name: boldFont, size: 17)
         
         return label
     }()

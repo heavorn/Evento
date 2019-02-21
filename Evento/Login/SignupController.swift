@@ -154,10 +154,12 @@ class SignupController: UIViewController, UIImagePickerControllerDelegate, UINav
                 print(error!)
                 return
             }
-            guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else {return}
-            mainTabBarController.setupViewController()
-            
+            if let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController {
+                mainTabBarController.selectedIndex = 0
+                mainTabBarController.setupViewController()
+            }
             self.dismiss(animated: true, completion: nil)
+            
         })
     }
     

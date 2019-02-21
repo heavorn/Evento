@@ -40,27 +40,7 @@ exports.sendMail = functions.https.onRequest(function(req, res) {
 		`;
 
 	mailOptions.to = req.query.mailTo;
-
-	// mailOptions.html =
-	// 	`
-	// 	<p>
-	// 		We'd like to say thank you for keep using our service.</br></br>
-	// 	</p>
-	// 	<h3>
-	// 	  	Event Name: GG.</br>
-	// 	  	Your Ticket Number: 1232.
-	// 	</h3>
-	// 	`;
-
-	// mailOptions.text = query;
-
-	// try {
-	// 	await transporter.sendMail(mailOptions);
-
-	// 	return { error: null, isOk: true };
-	// } catch (error) {
-	// 	return { error: error.message, isOk: false };
-	// }
+	
 	transporter
 		.sendMail(mailOptions)
 		.then(function() {

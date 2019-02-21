@@ -157,14 +157,14 @@ class PostProfile: UIViewController {
         // prepare json data
         let parameters: [String: String] = ["mailTo": email, "eventName": postName, "number": id, "userName": (currentUser?.name)!]
         
-//        postRequest(url: "https://us-central1-evento-1dd01.cloudfunctions.net/sendMail", para: parameters) { ([String : Any]?, error) in
-//            if (error != nil){
-//                print("Failed to request:", error!)
-//                return
-//            }
-//
-//            print("Successfully sent.")
-//        }
+        postRequest(url: "https://us-central1-evento-1dd01.cloudfunctions.net/sendMail", para: parameters) { ([String : Any]?, error) in
+            if (error != nil){
+                print("Failed to request:", error!)
+                return
+            }
+
+            print("Successfully sent.")
+        }
         
         
         let value2 = [uid: Date().timeIntervalSince1970] as [String : Any]

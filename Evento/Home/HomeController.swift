@@ -152,7 +152,6 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         self.filters.removeAll()
         var index = 0
         if type == "All" {
-            print("OK")
             while index < posts.count {
                 if posts[index].city == location {
                     self.filters.append(posts[index])
